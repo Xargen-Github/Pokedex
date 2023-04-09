@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+// import { usePokemonStore } from '@/stores/usePokemonStore'
+// import { storeToRefs } from 'pinia'
+// const store = usePokemonStore();
+// const { getPokemonList, getPokemonTypesList } = storeToRefs(store)
+
+// store.fetchPokemonTypes();
+// store.fetchPokemon();
 </script>
 
 <template>
@@ -9,7 +16,8 @@ import HelloWorld from './components/HelloWorld.vue'
 
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
-
+      <!-- {{ getPokemonList[0] }}
+      {{ getPokemonTypesList[0] }} -->
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
