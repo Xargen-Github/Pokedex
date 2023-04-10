@@ -4,7 +4,7 @@ import axios from "axios";
 interface PokemonDetails {
     id: number,
     name: string,
-    types: Map<number, PokemonType | undefined>
+    types: Map<number, PokemonType>
 }
 
 interface PokemonType {
@@ -28,9 +28,12 @@ export const usePokemonStore = defineStore('pokemon', {
             try {
                 const data = await axios.get('https://stoplight.io/mocks/appwise-be/pokemon/57519009/pokemon')
                 this.pokemon = data.data.map((detail: any): PokemonDetails => {
-                    const typeMap = new Map<number, PokemonType | undefined>();
+                    const typeMap = new Map<number, PokemonType>();
                     detail.types.forEach((pokemonType: { slot: number; type: { name: string; }; }) => {
-                        typeMap.set(pokemonType.slot, this.getPokemonTypeByName(pokemonType.type.name));
+                        const foundPokemonType = this.getPokemonTypeByName(pokemonType.type.name);
+                        if (foundPokemonType !== undefined) {
+                            typeMap.set(pokemonType.slot, foundPokemonType);
+                        }
                     });
                     return {
                         id: detail.id,
