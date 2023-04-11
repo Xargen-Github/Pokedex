@@ -37,7 +37,7 @@ store.fetchPokemon();
         <div class="w-full">
             <div class="w-full my-2 p-2 shadow-md bg-white rounded-lg flex flex-row" v-for="pokemon of getPokemonList" :key="pokemon.id">
                 <div class="flex-auto">
-                    <img />
+                    <img :src="pokemon.sprites.front_default"/>
                 </div>
                 <div class="flex-auto">
                     <h2 class="capitalize font-bold">{{ pokemon.name }}</h2>
