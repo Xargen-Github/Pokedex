@@ -2,11 +2,14 @@
 import { usePokemonStore } from '@/stores/usePokemonStore'
 import { storeToRefs } from 'pinia'
 import PokemonListItem from './PokemonListItem.vue';
+import { onBeforeMount } from 'vue'
 const store = usePokemonStore();
 const { getPokemonList } = storeToRefs(store)
 
-store.fetchPokemonTypes();
-store.fetchPokemon();
+onBeforeMount(() => {
+    store.fetchPokemonTypes()
+    store.fetchPokemon()
+})
 </script>
 
 <template>
