@@ -2,6 +2,7 @@
 import { usePokemonStore } from '@/stores/usePokemonStore'
 import { storeToRefs } from 'pinia'
 import PokemonListItem from './PokemonListItem.vue';
+import LargeColoredButton from './LargeColoredButton.vue';
 import { onBeforeMount } from 'vue'
 const store = usePokemonStore();
 const { getPokemonList } = storeToRefs(store)
@@ -13,7 +14,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <div class="bg-white text-black p-4">
+    <div class="bg-white text-black p-4 flex gap-2 flex-col">
         <div class="block text-right">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                 class="w-6 h-6 inline">
@@ -27,18 +28,31 @@ onBeforeMount(() => {
             </svg>
         </div>
         <h1 class="text-3xl font-bold">Pokédex</h1>
-        <form>
-            <input type="search" placeholder="Pokémon zoeken" />
+        <form class="w-full bg-slate-100 rounded-lg box-border flex flex-row text-slate-400 h-8">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="grow-0 box-border pl-2 py-1 h-full">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+            <input class="bg-inherit h-full px-2 py-1 flex-1" type="search" placeholder="Pokémon zoeken" />
         </form>
-        <div>
-            <button>
-                Mijn team
-            </button>
-            <button>
-                Favorieten
-            </button>
+        <div class="flex gap-2">
+            <LargeColoredButton class="bg-violet-800 flex-auto">
+                <template v-slot:title>
+                    Mijn team
+                </template>
+                <template v-slot:subTitle>
+                    5 pokemons
+                </template>
+            </LargeColoredButton>
+            <LargeColoredButton class="bg-teal-400 flex-auto">
+                <template v-slot:title>
+                    Favorieten
+                </template>
+                <template v-slot:subTitle>
+                    12 pokemons
+                </template>
+            </LargeColoredButton>
         </div>
-        <div class="w-full">
+        <div class="w-full flex flex-col gap-1">
             <PokemonListItem v-for="pokemon of getPokemonList" :key="pokemon.id" :pokemon="pokemon"/>
         </div>
     </div></template>

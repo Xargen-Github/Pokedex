@@ -11,21 +11,21 @@
 </script>
 
 <template>
-    <div class="w-full my-2 p-2 shadow-md bg-white rounded-lg flex flex-row" :key="pokemon.id">
-        <div class="flex-auto">
-            <img :src="pokemon.sprites.front_default"/>
+    <div class="w-full p-2 shadow-md bg-white rounded-lg flex flex-row h-16" :key="pokemon.id">
+        <div class="flex-none">
+            <img class="h-full w-auto" :src="pokemon.sprites.front_default"/>
         </div>
-        <div class="flex-auto">
+        <div class="flex-none">
             <h2 class="capitalize font-bold">{{ pokemon.name }}</h2>
-            <p class="text-gray-500">Nr. {{ pokemon.id }}</p>
+            <p class="text-slate-400">Nr. {{ pokemon.id }}</p>
         </div>
-        <div class="flex-auto text-right">
+        <div class="flex-1 text-right">
             <span class="text-white rounded-full bg-sky-500 px-3 py-1" v-for="[pokemonTypeKey, pokemonType] in pokemon.types" :key="pokemonTypeKey">
                 {{ pokemonType.name }}
             </span>
         </div>
         <div class="flex-none">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-slate-400">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
             </svg>
         </div>
