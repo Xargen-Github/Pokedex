@@ -16,16 +16,20 @@ export const usePokemonStore = defineStore('pokemon', {
     actions: {
         async fetchPokemon() {
             try {
+                //Fetch pokemon data
                 const data = await axios.get('https://stoplight.io/mocks/appwise-be/pokemon/57519009/pokemon')
+                //Convert data into list of PokemonDetails
                 this.pokemon = data.data.map((detail: any): PokemonDetails => {
+                    //Convert data into map with slot number as key and PokemonType as value
                     const typeMap = new Map<number, PokemonType>();
                     detail.types.forEach((pokemonType: { slot: number; type: { name: string; }; }) => {
+                        //Get PokemonType by name
                         const foundPokemonType = this.getPokemonTypeByName(pokemonType.type.name);
                         if (foundPokemonType !== undefined) {
                             typeMap.set(pokemonType.slot, foundPokemonType);
                         }
                     });
-                    console.log(detail.sprites);
+                    //Return PokemonDetails
                     return {
                         id: detail.id,
                         name: detail.name,
@@ -40,10 +44,14 @@ export const usePokemonStore = defineStore('pokemon', {
         },
         async fetchPokemonTypes() {
             try {
+                //Fetch pokemon type data
                 const data = await axios.get('https://pokeapi.co/api/v2/type')
-
+                
+                //Convert data into list of PokemonType
                 this.pokemonTypes= data.data.results.map((pokemonType: { url: string; name: string; }): PokemonType => {
+                    //Return PokemonType
                     return {
+                        //Retrieve id from url
                         id: Number(pokemonType.url.split("/").at(-2)),
                         name: pokemonType.name,
                     }
@@ -54,6 +62,7 @@ export const usePokemonStore = defineStore('pokemon', {
             }
         },
         getPokemonTypeByName(name: string) {
+            //Return PokemonType with given name from pokemonTypes list
             return this.pokemonTypes.find((pokemonType) => pokemonType.name == name.toLowerCase())
         }
     }
