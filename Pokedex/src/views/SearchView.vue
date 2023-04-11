@@ -9,7 +9,7 @@ store.fetchPokemon();
 </script>
 
 <template>
-    <div class="bg-white text-black">
+    <div class="bg-white text-black p-4">
         <div class="block text-right">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                 class="w-6 h-6 inline">
@@ -35,13 +35,24 @@ store.fetchPokemon();
             </button>
         </div>
         <div class="w-full">
-            <div class="w-5/6 shadow-xl m-8 bg-white rounded-lg" v-for="pokemon of getPokemonList" :key="pokemon.id">
-                <img />
-                <h2>{{ pokemon.name }}</h2>
-                <p>Nr. {{ pokemon.id }}</p>
-                <span v-for="[pokemonTypeKey, pokemonType] in pokemon.types" :key="pokemonTypeKey">
-                    {{ pokemonType.name }}
-                </span>
+            <div class="w-full my-2 p-2 shadow-md bg-white rounded-lg flex flex-row" v-for="pokemon of getPokemonList" :key="pokemon.id">
+                <div class="flex-auto">
+                    <img />
+                </div>
+                <div class="flex-auto">
+                    <h2 class="capitalize font-bold">{{ pokemon.name }}</h2>
+                    <p class="text-gray-500">Nr. {{ pokemon.id }}</p>
+                </div>
+                <div class="flex-auto text-right">
+                    <span class="text-white rounded-full bg-sky-500 px-3 py-1" v-for="[pokemonTypeKey, pokemonType] in pokemon.types" :key="pokemonTypeKey">
+                        {{ pokemonType.name }}
+                    </span>
+                </div>
+                <div class="flex-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </div>
             </div>
         </div>
     </div></template>
