@@ -35,11 +35,11 @@ store.fetchPokemon();
             </button>
         </div>
         <div class="w-full">
-            <div class="w-5/6 shadow-xl m-8 bg-white rounded-lg" v-for="pokemon of getPokemonList">
+            <div class="w-5/6 shadow-xl m-8 bg-white rounded-lg" v-for="pokemon of getPokemonList" :key="pokemon.id">
                 <img />
                 <h2>{{ pokemon.name }}</h2>
                 <p>Nr. {{ pokemon.id }}</p>
-                <span v-for="[pokemonTypeKey, pokemonType] in pokemon.types">
+                <span v-for="[pokemonTypeKey, pokemonType] in pokemon.types" :key="pokemonTypeKey">
                     {{ pokemonType.name }}
                 </span>
             </div>
