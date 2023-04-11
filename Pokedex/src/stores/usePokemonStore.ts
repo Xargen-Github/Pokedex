@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import type { PokemonDetails, PokemonType } from "@/types/pokemonTypes";
+import type { PokemonDetails, PokemonType, SortingOrderPokemon } from "@/types/pokemonTypes";
 
 export const usePokemonStore = defineStore('pokemon', {
     state: () => ({ 
@@ -9,7 +9,9 @@ export const usePokemonStore = defineStore('pokemon', {
     }),
 
     getters: {
-        getPokemonList: (state) => state.pokemon,
+        getPokemonList: (state) => {
+            return (sortingOrder: SortingOrderPokemon) => state.pokemon.sort(sortingOrder.orderingFunction)
+        },
         getPokemonTypesList: (state) => state.pokemonTypes
     },
     

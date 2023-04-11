@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { usePokemonStore } from '@/stores/usePokemonStore'
+import { SortingOrderPokemon } from "@/types/pokemonTypes";
 import { storeToRefs } from 'pinia'
 import PokemonListItem from './PokemonListItem.vue';
 import LargeColoredButton from './LargeColoredButton.vue';
@@ -53,6 +54,6 @@ onBeforeMount(() => {
             </LargeColoredButton>
         </div>
         <div class="w-full flex flex-col gap-1">
-            <PokemonListItem v-for="pokemon of getPokemonList" :key="pokemon.id" :pokemon="pokemon"/>
+            <PokemonListItem v-for="pokemon of getPokemonList(SortingOrderPokemon.NUM_ASC)" :key="pokemon.id" :pokemon="pokemon"/>
         </div>
     </div></template>
