@@ -1,28 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-
-interface PokemonDetails {
-    id: number,
-    name: string,
-    types: Map<number, PokemonType>,
-    sprites: PokemonSprites
-}
-
-interface PokemonType {
-    id: number,
-    name: string
-}
-
-interface PokemonSprites {
-    back_default: string | undefined,
-    back_female: string | undefined,
-    back_shiny: string | undefined,
-    back_shiny_female: string | undefined,
-    front_default: string | undefined,
-    front_female: string | undefined,
-    front_shiny: string | undefined,
-    front_shiny_female: string | undefined
-}
+import type { PokemonDetails, PokemonType } from "@/types/pokemonTypes";
 
 export const usePokemonStore = defineStore('pokemon', {
     state: () => ({ 
