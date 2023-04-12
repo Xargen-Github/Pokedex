@@ -7,6 +7,8 @@ import router from './router'
 
 import 'virtual:windi.css'
 
+import 'primeicons/primeicons.css';
+
 import './assets/main.css'
 
 const app = createApp(App)

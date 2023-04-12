@@ -4,9 +4,17 @@ import { SortingOrderPokemon } from "@/types/pokemonTypes";
 import { storeToRefs } from 'pinia'
 import PokemonListItem from './PokemonListItem.vue';
 import LargeColoredButton from './LargeColoredButton.vue';
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
+import PopUpSelection from './PopUpSelection.vue';
+
 const store = usePokemonStore();
 const { getPokemonList } = storeToRefs(store)
+
+let sortingOrder = ref(SortingOrderPokemon.ALFA_ASC);
+
+function updateSortingOrder(so:any) {
+    sortingOrder.value = so
+}
 
 onBeforeMount(() => {
     store.fetchPokemonTypes()
@@ -22,11 +30,15 @@ onBeforeMount(() => {
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
             </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                class="w-6 h-6 inline">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
-            </svg>
+            <PopUpSelection :modelValue="sortingOrder"
+                @update:modelValue="updateSortingOrder" 
+                :items="[
+                    SortingOrderPokemon.ALFA_ASC,
+                    SortingOrderPokemon.ALFA_DESC,
+                    SortingOrderPokemon.NUM_ASC,
+                    SortingOrderPokemon.NUM_DESC
+                ]" 
+                :initial="SortingOrderPokemon.ALFA_ASC"/>
         </div>
         <h1 class="text-3xl font-bold">Pokédex</h1>
         <form class="w-full bg-slate-100 rounded-lg box-border flex flex-row text-slate-400 h-8">
@@ -54,6 +66,7 @@ onBeforeMount(() => {
             </LargeColoredButton>
         </div>
         <div class="w-full flex flex-col gap-1">
-            <PokemonListItem v-for="pokemon of getPokemonList(SortingOrderPokemon.NUM_ASC)" :key="pokemon.id" :pokemon="pokemon"/>
+            <PokemonListItem v-for="pokemon of getPokemonList(sortingOrder)" :key="pokemon.id" :pokemon="pokemon"/>
         </div>
-    </div></template>
+    </div>
+</template>

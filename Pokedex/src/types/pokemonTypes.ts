@@ -24,7 +24,7 @@ export interface PokemonSprites {
 }
 
 export class SortingOrderPokemon extends SortingOrder {
-    static readonly ALFA_ASC  = new SortingOrder('Alfabetisch oplopend', (a, b) => {
+    static readonly ALFA_ASC  = new SortingOrder('Alfabetisch oplopend', 'pi pi-sort-alpha-down', (a, b) => {
         if (a.name < b.name) {
             return -1;
         }
@@ -35,7 +35,7 @@ export class SortingOrderPokemon extends SortingOrder {
 
         return 0;
     });
-    static readonly ALFA_DESC = new SortingOrder('Alfabetisch aflopend',  (a, b) => {
+    static readonly ALFA_DESC = new SortingOrder('Alfabetisch aflopend', 'pi pi-sort-alpha-up', (a, b) => {
         if (a.name < b.name) {
             return 1;
         }
@@ -46,7 +46,7 @@ export class SortingOrderPokemon extends SortingOrder {
         
         return 0;
     });
-    static readonly NUM_ASC  = new SortingOrder('Numeriek oplopend',  (a, b) => {
+    static readonly NUM_ASC  = new SortingOrder('Numeriek oplopend', 'pi pi-sort-numeric-down', (a, b) => {
         if (a.id < b.id) {
             return -1;
         }
@@ -57,7 +57,7 @@ export class SortingOrderPokemon extends SortingOrder {
         
         return 0;
     });
-    static readonly NUM_DESC  = new SortingOrder('Numeriek aflopend', (a, b) => {
+    static readonly NUM_DESC  = new SortingOrder('Numeriek aflopend', 'pi pi-sort-numeric-up', (a, b) => {
         if (a.id < b.id) {
             return 1;
         }
@@ -68,7 +68,7 @@ export class SortingOrderPokemon extends SortingOrder {
         
         return 0;
     });
-    constructor(title: string, orderingFunction: (a: PokemonDetails, b: PokemonDetails) => number) {
-        super(title, orderingFunction)
+    constructor(title: string, icon: string, orderingFunction: (a: PokemonDetails, b: PokemonDetails) => number) {
+        super(title, icon, orderingFunction)
     }
 }
