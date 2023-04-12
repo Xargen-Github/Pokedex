@@ -23,7 +23,7 @@ onBeforeMount(() => {
 </script>
 
 <template>
-    <div class="bg-white text-black p-4 flex gap-2 flex-col">
+    <div class="bg-white text-black p-4 flex gap-2 flex-col min-h-screen">
         <div class="block text-right">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                 class="w-6 h-6 inline">

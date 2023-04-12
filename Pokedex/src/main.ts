@@ -7,6 +7,8 @@ import router from './router'
 
 import 'virtual:windi.css'
 
+import "primevue/resources/themes/tailwind-light/theme.css";     
+import "primevue/resources/primevue.min.css";
 import 'primeicons/primeicons.css';
 
 import './assets/main.css'
