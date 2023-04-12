@@ -4,7 +4,10 @@ export interface PokemonDetails {
     id: number,
     name: string,
     types: Map<number, PokemonType>,
-    sprites: PokemonSprites
+    sprites: PokemonSprites,
+    base_experience: number | undefined,
+    height: number | undefined,
+    weight: number | undefined
 }
 
 export interface PokemonType {
@@ -21,6 +24,23 @@ export interface PokemonSprites {
     front_female: string | undefined,
     front_shiny: string | undefined,
     front_shiny_female: string | undefined
+}
+
+export interface PokemonAbility {
+    name: string | undefined,
+}
+
+export interface PokemonMove {
+    name: string | undefined,
+}
+
+export interface PokemonStat {
+    base_stat: number,
+    pokemonStatType: PokemonStatType
+}
+
+export interface PokemonStatType {
+    name: string | undefined,
 }
 
 export class SortingOrderPokemon extends SortingOrder {
