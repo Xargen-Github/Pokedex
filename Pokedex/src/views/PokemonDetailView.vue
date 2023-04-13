@@ -2,20 +2,23 @@
 import { defineComponent, type PropType } from 'vue'
 import axios from 'axios'
 import type { PokemonDetails, PokemonSpecies, EvolutionChain } from '@/types/pokemonTypes'
-import Card from 'primevue/card';
-import ProgressBar from 'primevue/progressbar';
-import Tag from 'primevue/tag';
-import PokemonTypeTag from './PokemonTypeTag.vue';
+import Card from 'primevue/card'
+import ProgressBar from 'primevue/progressbar'
+import Tag from 'primevue/tag'
+import PokemonTypeTag from './PokemonTypeTag.vue'
 import { usePokemonStore } from '@/stores/usePokemonStore'
 import { storeToRefs } from 'pinia'
-import PokemonListItem from './PokemonListItem.vue';
-import { idFromUrl, getEvolutionChainRecursive, getIdsFromEvolutionChainRecursive } from '@/utils/pokemonUtils';
+import PokemonListItem from './PokemonListItem.vue'
+import {
+    idFromUrl,
+    getEvolutionChainRecursive,
+    getIdsFromEvolutionChainRecursive
+} from '@/utils/pokemonUtils'
 import PrimevueImage from 'primevue/image'
-
 
 export default defineComponent({
     setup() {
-        const store = usePokemonStore();
+        const store = usePokemonStore()
         const { getPokemonByIds } = storeToRefs(store)
         return { getPokemonByIds, store, getIdsFromEvolutionChainRecursive }
     },
@@ -25,12 +28,12 @@ export default defineComponent({
         Tag,
         PokemonTypeTag,
         PokemonListItem,
-        PrimevueImage
+        PrimevueImage,
     },
     data() {
         return {
             pokemon: {} as PokemonDetails,
-            species: {} as PokemonSpecies,
+            species: {} as PokemonSpecies
         }
     },
     created() {
@@ -49,8 +52,8 @@ export default defineComponent({
             try {
                 //Fetch pokemon data
                 const data = await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.$route.params.id}`)
-                this.pokemon = data.data;
-                console.log(this.pokemon.sprites.front_default);
+                this.pokemon = data.data
+                console.log(this.pokemon.sprites.front_default)
             } catch (error) {
                 console.log(error)
             }
@@ -63,100 +66,112 @@ export default defineComponent({
                 id: speciesData.id,
                 evolution_chain: await this.fetchEvolutionChain(idFromUrl(speciesData.evolution_chain.url))
             }
-            this.species = species;
+            this.species = species
         },
         async fetchEvolutionChain(id: number) {
             const data = await axios.get(`https://pokeapi.co/api/v2/evolution-chain/${id}`)
             const evolutionChainData = data.data
             const evolutionChain: EvolutionChain = getEvolutionChainRecursive(evolutionChainData.chain)
-            return evolutionChain;
+            return evolutionChain
         },
         async fetchData() {
             await this.fetchPokemon()
             this.fetchPokemonSpecies(this.pokemon.id)
         }
-    },
+    }
 })
 </script>
 
 <template>
-    <div class="bg-green-300 text-black p-4 min-h-screen">
-        <h1 class="text-white text-3xl font-bold capitalize">{{ pokemon.name }}</h1>
-        <div class="flex flex-row justify-center">
-            <PrimevueImage image-class="w-screen h-auto w-52 max-h-screen" :src="pokemon.sprites.front_default" preview/>
-        </div>
-        <h2 class="text-white">About</h2>
-        <Card>
-            <template #content>
-                <p class="text-sm text-black">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
-                    quas!
-                </p>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="contents">
-                        <div class="flex-1 text-gray-500">Type</div>
-                        <div class="flex-1">
-                            <PokemonTypeTag v-for="pokemonTypeSlot in pokemon.types" :key="pokemonTypeSlot.slot" :pokemon-type="pokemonTypeSlot.type"></PokemonTypeTag>
+    <div class="bg-green-300 text-black min-h-screen">
+        <nav class="absolute flex flex-row justify-between sticky top-0 backdrop-filter backdrop-blur z-50 text-white m-0 p-2">
+            <router-link class="" to="/">
+                <i class="pi pi-chevron-left"></i>
+            </router-link>
+            <span>{{ pokemon.name }}</span>
+            <i class="pi pi-heart"></i>
+        </nav>
+        <div class="p-4">
+            <h1 class="text-white text-3xl font-bold capitalize">{{ pokemon.name }}</h1>
+            <div class="flex flex-row justify-center">
+                <PrimevueImage image-class="w-screen h-auto w-52 max-h-screen" :src="pokemon.sprites.front_default" preview />
+            </div>
+            <h2 class="text-white">About</h2>
+            <Card>
+                <template #content>
+                    <p class="text-sm text-black">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error
+                        repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa
+                        ratione quam perferendis esse, cupiditate neque quas!
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="contents">
+                            <div class="flex-1 text-gray-500">Type</div>
+                            <div class="flex-1">
+                                <PokemonTypeTag v-for="pokemonTypeSlot in pokemon.types" :key="pokemonTypeSlot.slot"
+                                    :pokemon-type="pokemonTypeSlot.type"></PokemonTypeTag>
+                            </div>
+                        </div>
+                        <div class="contents">
+                            <div class="flex-1 text-gray-500">Nummer</div>
+                            <div class="flex-1">{{ pokemon.id }}</div>
+                        </div>
+                        <div class="contents">
+                            <div class="flex-1 text-gray-500">Hoogte</div>
+                            <div class="flex-1">{{ pokemon.height }}</div>
+                        </div>
+                        <div class="contents">
+                            <div class="flex-1 text-gray-500">Gewicht</div>
+                            <div class="flex-1">{{ pokemon.weight }}</div>
+                        </div>
+                        <div class="contents">
+                            <div class="flex-1 text-gray-500">Categorie</div>
+                            <div class="flex-1">Seed</div>
+                        </div>
+                        <div class="contents">
+                            <div class="flex-1 text-gray-500">Geslacht</div>
+                            <div class="flex-1">M/F</div>
+                        </div>
+                        <div class="contents">
+                            <div class="flex-1 text-gray-500">Vaardigheden</div>
+                            <div class="flex-1">Overgroeien</div>
                         </div>
                     </div>
-                    <div class="contents">
-                        <div class="flex-1 text-gray-500">Nummer</div>
-                        <div class="flex-1">{{ pokemon.id }}</div>
-                    </div>
-                    <div class="contents">
-                        <div class="flex-1 text-gray-500">Hoogte</div>
-                        <div class="flex-1">{{ pokemon.height }}</div>
-                    </div>
-                    <div class="contents">
-                        <div class="flex-1 text-gray-500">Gewicht</div>
-                        <div class="flex-1">{{ pokemon.weight }}</div>
-                    </div>
-                    <div class="contents">
-                        <div class="flex-1 text-gray-500">Categorie</div>
-                        <div class="flex-1">Seed</div>
-                    </div>
-                    <div class="contents">
-                        <div class="flex-1 text-gray-500">Geslacht</div>
-                        <div class="flex-1">M/F</div>
-                    </div>
-                    <div class="contents">
-                        <div class="flex-1 text-gray-500">Vaardigheden</div>
-                        <div class="flex-1">Overgroeien</div>
-                    </div>
-                </div>
-            </template>
-        </Card>
-        
-        <h2 class="text-white">Statistieken</h2>
-        <Card>
-            <template #content>
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="contents" v-for="pokemonStat in pokemon.stats" :key="pokemonStat.stat.name">
-                        <div class="flex-1 text-gray-500">{{ pokemonStat.stat.name }}</div>
-                        <div class="flex-1 text-black">{{ pokemonStat.base_stat }}</div>
-                        <div class="flex-1">
-                            <ProgressBar :value="pokemonStat.base_stat" :show-value="false"></ProgressBar>
+                </template>
+            </Card>
+
+            <h2 class="text-white">Statistieken</h2>
+            <Card>
+                <template #content>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="contents" v-for="pokemonStat in pokemon.stats" :key="pokemonStat.stat.name">
+                            <div class="flex-1 text-gray-500">{{ pokemonStat.stat.name }}</div>
+                            <div class="flex-1 text-black">{{ pokemonStat.base_stat }}</div>
+                            <div class="flex-1">
+                                <ProgressBar :value="pokemonStat.base_stat" :show-value="false"></ProgressBar>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </template>
-        </Card>
-        
-        <h2 class="text-white">Moveset</h2>
-        <Card>
-            <template #content>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="flex flex-row" v-for="pokemonType in pokemon.types" :key="pokemonType.slot">
-                        <Tag value="Level 1" rounded></Tag>
-                        <div class="flex-1 text-black">{{ pokemonType.type.name }}</div>
+                </template>
+            </Card>
+
+            <h2 class="text-white">Moveset</h2>
+            <Card>
+                <template #content>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-row" v-for="pokemonType in pokemon.types" :key="pokemonType.slot">
+                            <Tag value="Level 1" rounded></Tag>
+                            <div class="flex-1 text-black">{{ pokemonType.type.name }}</div>
+                        </div>
                     </div>
-                </div>
-            </template>
-        </Card>
-        
-        <h2 class="text-white">Evolutie</h2>
-        <div v-if="species.evolution_chain != undefined" class="w-full flex flex-col gap-1">
-            <PokemonListItem v-for="p of getPokemonByIds(getIdsFromEvolutionChainRecursive(species.evolution_chain))" :key="p.id" :pokemon="p"/>
+                </template>
+            </Card>
+
+            <h2 class="text-white">Evolutie</h2>
+            <div v-if="species.evolution_chain != undefined" class="w-full flex flex-col gap-1">
+                <PokemonListItem v-for="p of getPokemonByIds(getIdsFromEvolutionChainRecursive(species.evolution_chain))"
+                    :key="p.id" :pokemon="p" />
+            </div>
         </div>
     </div>
 </template>
