@@ -61,7 +61,7 @@ function updateSortingOrder(so:any) {
             </LargeColoredButton>
         </div>
         <div class="w-full flex flex-col gap-1">
-            <PokemonListItem v-for="pokemon of getPokemonList(sortingOrder)" :key="pokemon.id" :pokemon="pokemon"/>
+            <PokemonListItem v-for="p of getPokemonList(sortingOrder)" :key="p.id" :pokemon="p"/>
         </div>
     </div>
 </template>

@@ -31,9 +31,16 @@ export default defineComponent({
             species: {} as PokemonSpecies,
         }
     },
+    created() {
+        this.$watch(
+            () => this.$route.params,
+            async () => {
+                this.fetchData()
+            }
+        )
+    },
     async beforeMount() {
-        await this.fetchPokemon()
-        this.fetchPokemonSpecies(this.pokemon.id)
+        this.fetchData()
     },
     methods: {
         async fetchPokemon() {
@@ -62,7 +69,10 @@ export default defineComponent({
             const evolutionChain: EvolutionChain = getEvolutionChainRecursive(evolutionChainData.chain)
             return evolutionChain;
         },
-
+        async fetchData() {
+            await this.fetchPokemon()
+            this.fetchPokemonSpecies(this.pokemon.id)
+        }
     },
 })
 </script>
