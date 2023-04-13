@@ -5,16 +5,28 @@ import type { PokemonDetails } from '@/types/pokemonTypes'
 import Card from 'primevue/card';
 import ProgressBar from 'primevue/progressbar';
 import Tag from 'primevue/tag';
+import PokemonTypeTag from './PokemonTypeTag.vue';
+import { usePokemonStore } from '@/stores/usePokemonStore'
+import { storeToRefs } from 'pinia'
+import PokemonListItem from './PokemonListItem.vue';
+
 
 export default defineComponent({
+    setup() {
+        const store = usePokemonStore();
+        const { getPokemonByIds } = storeToRefs(store)
+        return { getPokemonByIds, store }
+    },
     components: {
         Card,
         ProgressBar,
-        Tag
+        Tag,
+        PokemonTypeTag,
+        PokemonListItem
     },
     data() {
         return {
-            pokemon: Object as PropType<PokemonDetails>
+            pokemon: {} as PokemonDetails
         }
     },
     beforeMount() {
@@ -26,7 +38,7 @@ export default defineComponent({
                 //Fetch pokemon data
                 const data = await axios.get(`https://pokeapi.co/api/v2/pokemon/${this.$route.params.id}`)
                 this.pokemon = data.data;
-                console.log(this.pokemon);
+                console.log(this.pokemon.sprites.front_default);
             } catch (error) {
                 console.log(error)
             }
@@ -38,7 +50,8 @@ export default defineComponent({
 
 <template>
     <div class="bg-green-300 text-black p-4 min-h-screen">
-        <h1>Details: {{ $route.params.id }}</h1>
+        <h1 class="text-white text-3xl font-bold capitalize">{{ pokemon.name }}</h1>
+        <img class="w-full h-auto" :src="pokemon.sprites.front_default">
         <h2 class="text-white">About</h2>
         <Card>
             <template #content>
@@ -48,8 +61,34 @@ export default defineComponent({
                 </p>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="contents">
+                        <div class="flex-1 text-gray-500">Type</div>
+                        <div class="flex-1">
+                            <PokemonTypeTag v-for="pokemonTypeSlot in pokemon.types" :key="pokemonTypeSlot.slot" :pokemon-type="pokemonTypeSlot.type"></PokemonTypeTag>
+                        </div>
+                    </div>
+                    <div class="contents">
                         <div class="flex-1 text-gray-500">Nummer</div>
-                        <div class="flex-1">001</div>
+                        <div class="flex-1">{{ pokemon.id }}</div>
+                    </div>
+                    <div class="contents">
+                        <div class="flex-1 text-gray-500">Hoogte</div>
+                        <div class="flex-1">{{ pokemon.height }}</div>
+                    </div>
+                    <div class="contents">
+                        <div class="flex-1 text-gray-500">Gewicht</div>
+                        <div class="flex-1">{{ pokemon.weight }}</div>
+                    </div>
+                    <div class="contents">
+                        <div class="flex-1 text-gray-500">Categorie</div>
+                        <div class="flex-1">Seed</div>
+                    </div>
+                    <div class="contents">
+                        <div class="flex-1 text-gray-500">Geslacht</div>
+                        <div class="flex-1">M/F</div>
+                    </div>
+                    <div class="contents">
+                        <div class="flex-1 text-gray-500">Vaardigheden</div>
+                        <div class="flex-1">Overgroeien</div>
                     </div>
                 </div>
             </template>
@@ -59,11 +98,11 @@ export default defineComponent({
         <Card>
             <template #content>
                 <div class="grid grid-cols-3 gap-4">
-                    <div class="contents">
-                        <div class="flex-1 text-gray-500">HP</div>
-                        <div class="flex-1 text-black">50</div>
+                    <div class="contents" v-for="pokemonStat in pokemon.stats" :key="pokemonStat.stat.name">
+                        <div class="flex-1 text-gray-500">{{ pokemonStat.stat.name }}</div>
+                        <div class="flex-1 text-black">{{ pokemonStat.base_stat }}</div>
                         <div class="flex-1">
-                            <ProgressBar :value="50" :show-value="false"></ProgressBar>
+                            <ProgressBar :value="pokemonStat.base_stat" :show-value="false"></ProgressBar>
                         </div>
                     </div>
                 </div>
@@ -74,23 +113,17 @@ export default defineComponent({
         <Card>
             <template #content>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="flex flex-row">
+                    <div class="flex flex-row" v-for="pokemonType in pokemon.types" :key="pokemonType.slot">
                         <Tag value="Level 1" rounded></Tag>
-                        <div class="flex-1 text-black">Tackle</div>
-                    </div>
-                    <div class="flex flex-row">
-                        <Tag value="Level 3" rounded></Tag>
-                        <div class="flex-1 text-black">Vine whip</div>
+                        <div class="flex-1 text-black">{{ pokemonType.type.name }}</div>
                     </div>
                 </div>
             </template>
         </Card>
         
         <h2 class="text-white">Evolutie</h2>
-        <Card>
-            <template #content>
-                Pokemonlistitems
-            </template>
-        </Card>
+        <div class="w-full flex flex-col gap-1">
+            <PokemonListItem v-for="p of getPokemonByIds([pokemon.id])" :key="p.id" :pokemon="p"/>
+        </div>
     </div>
 </template>

@@ -3,11 +3,17 @@ import { SortingOrder } from "./searchTypes";
 export interface PokemonDetails {
     id: number,
     name: string,
-    types: Map<number, PokemonType>,
+    types: PokemonTypeSlot[],
     sprites: PokemonSprites,
     base_experience: number | undefined,
     height: number | undefined,
-    weight: number | undefined
+    weight: number | undefined,
+    stats: PokemonStat[]
+}
+
+export interface PokemonTypeSlot {
+    slot: number,
+    type: PokemonType
 }
 
 export interface PokemonType {
@@ -36,7 +42,7 @@ export interface PokemonMove {
 
 export interface PokemonStat {
     base_stat: number,
-    pokemonStatType: PokemonStatType
+    stat: PokemonStatType
 }
 
 export interface PokemonStatType {

@@ -2,8 +2,12 @@
     import { defineComponent } from 'vue'
     import type { PropType } from 'vue'
     import type { PokemonDetails } from "@/types/pokemonTypes"
+    import PokemonTypeTag from './PokemonTypeTag.vue'
     
     export default defineComponent({
+        components: {
+            PokemonTypeTag
+        },
         props: {
             pokemon: { type: Object as PropType<PokemonDetails>, required: true }
         }
@@ -21,9 +25,7 @@
                 <p class="text-slate-400">Nr. {{ pokemon.id }}</p>
             </div>
             <div class="flex-1 text-right">
-                <span class="text-white rounded-full bg-sky-500 px-3 py-1" v-for="[pokemonTypeKey, pokemonType] in pokemon.types" :key="pokemonTypeKey">
-                    {{ pokemonType.name }}
-                </span>
+                <PokemonTypeTag v-for="pokemonTypeSlot in pokemon.types" :key="pokemonTypeSlot.slot" :pokemon-type="pokemonTypeSlot.type"></PokemonTypeTag>
             </div>
             <div class="flex-none">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-slate-400">

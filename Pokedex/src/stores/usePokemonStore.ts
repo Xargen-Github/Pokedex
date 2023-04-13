@@ -12,7 +12,13 @@ export const usePokemonStore = defineStore('pokemon', {
         getPokemonList: (state) => {
             return (sortingOrder: SortingOrderPokemon) => state.pokemon.sort(sortingOrder.orderingFunction)
         },
-        getPokemonTypesList: (state) => state.pokemonTypes
+        getPokemonTypesList: (state) => state.pokemonTypes,
+        
+        getPokemonByIds: (state) => {
+            return (ids: number[]) => { 
+                return state.pokemon.filter((p) => ids.includes(p.id)) 
+            }
+        }
     },
     
     actions: {
@@ -32,12 +38,7 @@ export const usePokemonStore = defineStore('pokemon', {
                         }
                     });
                     //Return PokemonDetails
-                    return {
-                        id: detail.id,
-                        name: detail.name,
-                        types: typeMap,
-                        sprites: detail.sprites
-                        }
+                    return detail;
                     })
             }
             catch (error) {
@@ -66,6 +67,6 @@ export const usePokemonStore = defineStore('pokemon', {
         getPokemonTypeByName(name: string) {
             //Return PokemonType with given name from pokemonTypes list
             return this.pokemonTypes.find((pokemonType) => pokemonType.name == name.toLowerCase())
-        }
+        },
     }
 })

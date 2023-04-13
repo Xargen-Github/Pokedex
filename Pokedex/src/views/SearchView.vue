@@ -15,11 +15,6 @@ let sortingOrder = ref(SortingOrderPokemon.ALFA_ASC);
 function updateSortingOrder(so:any) {
     sortingOrder.value = so
 }
-
-onBeforeMount(() => {
-    store.fetchPokemonTypes()
-    store.fetchPokemon()
-})
 </script>
 
 <template>
