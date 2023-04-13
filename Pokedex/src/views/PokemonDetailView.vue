@@ -10,6 +10,7 @@ import { usePokemonStore } from '@/stores/usePokemonStore'
 import { storeToRefs } from 'pinia'
 import PokemonListItem from './PokemonListItem.vue';
 import { idFromUrl, getEvolutionChainRecursive, getIdsFromEvolutionChainRecursive } from '@/utils/pokemonUtils';
+import PrimevueImage from 'primevue/image'
 
 
 export default defineComponent({
@@ -23,7 +24,8 @@ export default defineComponent({
         ProgressBar,
         Tag,
         PokemonTypeTag,
-        PokemonListItem
+        PokemonListItem,
+        PrimevueImage
     },
     data() {
         return {
@@ -80,7 +82,9 @@ export default defineComponent({
 <template>
     <div class="bg-green-300 text-black p-4 min-h-screen">
         <h1 class="text-white text-3xl font-bold capitalize">{{ pokemon.name }}</h1>
-        <img class="w-full h-auto" :src="pokemon.sprites.front_default">
+        <div class="flex flex-row justify-center">
+            <PrimevueImage image-class="w-screen h-auto w-52 max-h-screen" :src="pokemon.sprites.front_default" preview/>
+        </div>
         <h2 class="text-white">About</h2>
         <Card>
             <template #content>
