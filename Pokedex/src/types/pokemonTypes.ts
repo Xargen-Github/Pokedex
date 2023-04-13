@@ -49,6 +49,18 @@ export interface PokemonStatType {
     name: string | undefined,
 }
 
+export interface PokemonSpecies {
+    name: string,
+    id: number,
+    evolution_chain: EvolutionChain | undefined
+}
+
+export interface EvolutionChain {
+    prevChain: EvolutionChain | undefined
+    chains: EvolutionChain[]
+    species: PokemonSpecies
+}
+
 export class SortingOrderPokemon extends SortingOrder {
     static readonly ALFA_ASC  = new SortingOrder('Alfabetisch oplopend', 'pi pi-sort-alpha-down', (a, b) => {
         if (a.name < b.name) {

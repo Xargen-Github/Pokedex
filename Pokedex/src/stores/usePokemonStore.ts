@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import type { PokemonDetails, PokemonType, SortingOrderPokemon } from "@/types/pokemonTypes";
+import type { PokemonDetails, PokemonType, SortingOrderPokemon, PokemonSpecies, EvolutionChain } from "@/types/pokemonTypes";
+import { idFromUrl, getEvolutionChainRecursive } from "@/utils/pokemonUtils";
 
 export const usePokemonStore = defineStore('pokemon', {
     state: () => ({ 
@@ -18,7 +19,13 @@ export const usePokemonStore = defineStore('pokemon', {
             return (ids: number[]) => { 
                 return state.pokemon.filter((p) => ids.includes(p.id)) 
             }
-        }
+        },
+        getPokemonTypeByName: (state) => {
+            return (name: string) => {
+                //Return PokemonType with given name from pokemonTypes list
+                return state.pokemonTypes.find((pokemonType) => pokemonType.name == name.toLowerCase())
+            }
+        },
     },
     
     actions: {
@@ -55,7 +62,7 @@ export const usePokemonStore = defineStore('pokemon', {
                     //Return PokemonType
                     return {
                         //Retrieve id from url
-                        id: Number(pokemonType.url.split("/").at(-2)),
+                        id: idFromUrl(pokemonType.url),
                         name: pokemonType.name,
                     }
                 })
@@ -63,10 +70,6 @@ export const usePokemonStore = defineStore('pokemon', {
             catch (error) {
                 console.log(error)
             }
-        },
-        getPokemonTypeByName(name: string) {
-            //Return PokemonType with given name from pokemonTypes list
-            return this.pokemonTypes.find((pokemonType) => pokemonType.name == name.toLowerCase())
         },
     }
 })

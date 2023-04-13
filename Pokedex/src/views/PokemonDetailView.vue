@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue'
 import axios from 'axios'
-import type { PokemonDetails } from '@/types/pokemonTypes'
+import type { PokemonDetails, PokemonSpecies, EvolutionChain } from '@/types/pokemonTypes'
 import Card from 'primevue/card';
 import ProgressBar from 'primevue/progressbar';
 import Tag from 'primevue/tag';
@@ -9,13 +9,14 @@ import PokemonTypeTag from './PokemonTypeTag.vue';
 import { usePokemonStore } from '@/stores/usePokemonStore'
 import { storeToRefs } from 'pinia'
 import PokemonListItem from './PokemonListItem.vue';
+import { idFromUrl, getEvolutionChainRecursive, getIdsFromEvolutionChainRecursive } from '@/utils/pokemonUtils';
 
 
 export default defineComponent({
     setup() {
         const store = usePokemonStore();
         const { getPokemonByIds } = storeToRefs(store)
-        return { getPokemonByIds, store }
+        return { getPokemonByIds, store, getIdsFromEvolutionChainRecursive }
     },
     components: {
         Card,
@@ -26,11 +27,13 @@ export default defineComponent({
     },
     data() {
         return {
-            pokemon: {} as PokemonDetails
+            pokemon: {} as PokemonDetails,
+            species: {} as PokemonSpecies,
         }
     },
-    beforeMount() {
-        this.fetchPokemon()
+    async beforeMount() {
+        await this.fetchPokemon()
+        this.fetchPokemonSpecies(this.pokemon.id)
     },
     methods: {
         async fetchPokemon() {
@@ -42,6 +45,22 @@ export default defineComponent({
             } catch (error) {
                 console.log(error)
             }
+        },
+        async fetchPokemonSpecies(id: number) {
+            const data = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`)
+            const speciesData = data.data
+            const species: PokemonSpecies = {
+                name: speciesData.name,
+                id: speciesData.id,
+                evolution_chain: await this.fetchEvolutionChain(idFromUrl(speciesData.evolution_chain.url))
+            }
+            this.species = species;
+        },
+        async fetchEvolutionChain(id: number) {
+            const data = await axios.get(`https://pokeapi.co/api/v2/evolution-chain/${id}`)
+            const evolutionChainData = data.data
+            const evolutionChain: EvolutionChain = getEvolutionChainRecursive(evolutionChainData.chain)
+            return evolutionChain;
         },
 
     },
@@ -122,8 +141,8 @@ export default defineComponent({
         </Card>
         
         <h2 class="text-white">Evolutie</h2>
-        <div class="w-full flex flex-col gap-1">
-            <PokemonListItem v-for="p of getPokemonByIds([pokemon.id])" :key="p.id" :pokemon="p"/>
+        <div v-if="species.evolution_chain != undefined" class="w-full flex flex-col gap-1">
+            <PokemonListItem v-for="p of getPokemonByIds(getIdsFromEvolutionChainRecursive(species.evolution_chain))" :key="p.id" :pokemon="p"/>
         </div>
     </div>
 </template>
