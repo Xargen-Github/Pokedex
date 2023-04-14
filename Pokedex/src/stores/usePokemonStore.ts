@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import type { PokemonDetails, PokemonType, SortingOrderPokemon, PokemonSpecies, EvolutionChain } from "@/types/pokemonTypes";
-import { idFromUrl, getEvolutionChainRecursive } from "@/utils/pokemonUtils";
+import { type PokemonDetails, type PokemonType, SortingOrderPokemon, type PokemonSpecies, type EvolutionChain } from "@/types/pokemonTypes";
+import { idFromUrl } from "@/utils/pokemonUtils";
 
 export const usePokemonStore = defineStore('pokemon', {
     state: () => ({ 
@@ -11,7 +11,12 @@ export const usePokemonStore = defineStore('pokemon', {
 
     getters: {
         getPokemonList: (state) => {
-            return (sortingOrder: SortingOrderPokemon) => state.pokemon.sort(sortingOrder.orderingFunction)
+            return (sortingOrder: SortingOrderPokemon = SortingOrderPokemon.NUM_ASC, searchText: string = "") => 
+                state.pokemon.filter((p) => {
+                    searchText = searchText.toLowerCase()
+                    return p.id.toString().includes(searchText) || p.name.toLowerCase().includes(searchText)
+                })
+                .sort(sortingOrder.orderingFunction)
         },
         getPokemonTypesList: (state) => state.pokemonTypes,
         

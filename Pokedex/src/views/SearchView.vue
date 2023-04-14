@@ -10,7 +10,8 @@ import PopUpSelection from './PopUpSelection.vue';
 const store = usePokemonStore();
 const { getPokemonList } = storeToRefs(store)
 
-let sortingOrder = ref(SortingOrderPokemon.ALFA_ASC);
+const sortingOrder = ref(SortingOrderPokemon.NUM_ASC);
+const searchText = ref("");
 
 function updateSortingOrder(so:any) {
     sortingOrder.value = so
@@ -40,7 +41,7 @@ function updateSortingOrder(so:any) {
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="grow-0 box-border pl-2 py-1 h-full">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
             </svg>
-            <input class="bg-inherit h-full px-2 py-1 flex-1" type="search" placeholder="Pokémon zoeken" />
+            <input v-model="searchText" class="bg-inherit h-full px-2 py-1 flex-1" type="text" placeholder="Pokémon zoeken" />
         </form>
         <div class="flex gap-2">
             <LargeColoredButton class="bg-violet-800 flex-auto">
@@ -61,7 +62,7 @@ function updateSortingOrder(so:any) {
             </LargeColoredButton>
         </div>
         <div class="w-full flex flex-col gap-1">
-            <PokemonListItem v-for="p of getPokemonList(sortingOrder)" :key="p.id" :pokemon="p"/>
+            <PokemonListItem v-for="p of getPokemonList(sortingOrder, searchText)" :key="p.id" :pokemon="p"/>
         </div>
     </div>
 </template>
