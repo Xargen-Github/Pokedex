@@ -1,15 +1,15 @@
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue'
+import { defineComponent } from 'vue'
 import axios from 'axios'
 import type { PokemonDetails, PokemonSpecies, EvolutionChain } from '@/types/pokemonTypes'
 import Card from 'primevue/card'
 import ProgressBar from 'primevue/progressbar'
 import Tag from 'primevue/tag'
-import PokemonTypeTag from './PokemonTypeTag.vue'
+import PokemonTypeTag from '../components/PokemonTypeTag.vue'
 import { usePokemonStore } from '@/stores/usePokemonStore'
 import { useUserDataStore } from '@/stores/useUserDataStore'
 import { storeToRefs } from 'pinia'
-import PokemonListItem from './PokemonListItem.vue'
+import PokemonListItem from '../components/PokemonListItem.vue'
 import {
     idFromUrl,
     getEvolutionChainRecursive,
@@ -17,13 +17,13 @@ import {
 } from '@/utils/pokemonUtils'
 import PrimeVueImage from 'primevue/image'
 import PrimeVueButton from 'primevue/button'
-import TopBar from './TopBar.vue'
+import TopBar from '../components/TopBar.vue'
 
 export default defineComponent({
     setup() {
         const pokemonStore = usePokemonStore()
         const { getPokemonByIds } = storeToRefs(pokemonStore)
-        
+
         const userDataStore = useUserDataStore();
         const { isFavouritePokemon } = storeToRefs(userDataStore)
 
@@ -46,6 +46,7 @@ export default defineComponent({
         }
     },
     created() {
+        //Makes sure new data is fetched when a Pokémon is selected
         this.$watch(
             () => this.$route.params,
             async () => {
@@ -68,6 +69,7 @@ export default defineComponent({
             }
         },
         async fetchPokemonSpecies(id: number) {
+            //Fetch PokemonSpecies data
             const data = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`)
             const speciesData = data.data
             const species: PokemonSpecies = {
@@ -78,12 +80,14 @@ export default defineComponent({
             this.species = species
         },
         async fetchEvolutionChain(id: number) {
+            //Fetch EvolutionChain data
             const data = await axios.get(`https://pokeapi.co/api/v2/evolution-chain/${id}`)
             const evolutionChainData = data.data
             const evolutionChain: EvolutionChain = getEvolutionChainRecursive(evolutionChainData.chain)
             return evolutionChain
         },
         async fetchData() {
+            //Fetches data needed to populate the page
             await this.fetchPokemon()
             this.fetchPokemonSpecies(this.pokemon.id)
         }
@@ -96,15 +100,21 @@ export default defineComponent({
         <TopBar>
             <template v-slot:bar>
                 <span>{{ pokemon.name }}</span>
-                <PrimeVueButton v-if="isFavouritePokemon(pokemon)" icon="pi pi-heart-fill text-black bg-transparent" text rounded severity="secondary" @click="userDataStore.removeFavourite(pokemon)"/>
-                <PrimeVueButton v-else icon="pi pi-heart text-black bg-transparent" text rounded severity="secondary" @click="userDataStore.addFavourite(pokemon)"/>
+                <PrimeVueButton v-if="isFavouritePokemon(pokemon)" icon="pi pi-heart-fill text-black bg-transparent" text
+                    rounded severity="secondary" @click="userDataStore.removeFavourite(pokemon)" />
+                <PrimeVueButton v-else icon="pi pi-heart text-black bg-transparent" text rounded severity="secondary"
+                    @click="userDataStore.addFavourite(pokemon)" />
             </template>
         </TopBar>
+        
         <div class="p-4">
             <h1 class="text-white text-3xl font-bold capitalize">{{ pokemon.name }}</h1>
+
             <div v-if="pokemon.sprites != undefined" class="flex flex-row justify-center">
-                <PrimeVueImage image-class="w-screen h-auto w-52 max-h-screen" :src="pokemon.sprites.front_default" preview />
+                <PrimeVueImage image-class="w-screen h-auto w-52 max-h-screen" :src="pokemon.sprites.front_default"
+                    preview />
             </div>
+
             <h2 class="text-white">About</h2>
             <Card>
                 <template #content>
