@@ -7,6 +7,7 @@ import ProgressBar from 'primevue/progressbar'
 import Tag from 'primevue/tag'
 import PokemonTypeTag from './PokemonTypeTag.vue'
 import { usePokemonStore } from '@/stores/usePokemonStore'
+import { useUserDataStore } from '@/stores/useUserDataStore'
 import { storeToRefs } from 'pinia'
 import PokemonListItem from './PokemonListItem.vue'
 import {
@@ -20,9 +21,13 @@ import TopBar from './TopBar.vue'
 
 export default defineComponent({
     setup() {
-        const store = usePokemonStore()
-        const { getPokemonByIds, isFavouritePokemon } = storeToRefs(store)
-        return { getPokemonByIds, isFavouritePokemon, store, getIdsFromEvolutionChainRecursive }
+        const pokemonStore = usePokemonStore()
+        const { getPokemonByIds } = storeToRefs(pokemonStore)
+        
+        const userDataStore = useUserDataStore();
+        const { isFavouritePokemon } = storeToRefs(userDataStore)
+
+        return { getPokemonByIds, isFavouritePokemon, pokemonStore, userDataStore, getIdsFromEvolutionChainRecursive }
     },
     components: {
         Card,
@@ -91,8 +96,8 @@ export default defineComponent({
         <TopBar>
             <template v-slot:bar>
                 <span>{{ pokemon.name }}</span>
-                <PrimeVueButton v-if="isFavouritePokemon(pokemon)" icon="pi pi-heart-fill text-black bg-transparent" text rounded severity="secondary" @click="store.removeFavourite(pokemon)"/>
-                <PrimeVueButton v-else icon="pi pi-heart text-black bg-transparent" text rounded severity="secondary" @click="store.addFavourite(pokemon)"/>
+                <PrimeVueButton v-if="isFavouritePokemon(pokemon)" icon="pi pi-heart-fill text-black bg-transparent" text rounded severity="secondary" @click="userDataStore.removeFavourite(pokemon)"/>
+                <PrimeVueButton v-else icon="pi pi-heart text-black bg-transparent" text rounded severity="secondary" @click="userDataStore.addFavourite(pokemon)"/>
             </template>
         </TopBar>
         <div class="p-4">

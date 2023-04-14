@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { usePokemonStore } from '@/stores/usePokemonStore'
+import { useUserDataStore } from '@/stores/useUserDataStore';
 import { SortingOrderPokemon } from "@/types/pokemonTypes";
 import { storeToRefs } from 'pinia'
 import PokemonListItem from './PokemonListItem.vue';
@@ -8,8 +9,11 @@ import { onBeforeMount, onMounted, ref } from 'vue'
 import PopUpSelection from './PopUpSelection.vue';
 import PrimeVueButton from 'primevue/button'
 
-const store = usePokemonStore();
-const { getPokemonList, getFavouritesCount } = storeToRefs(store)
+const pokemonStore = usePokemonStore();
+const { getPokemonList } = storeToRefs(pokemonStore)
+
+const userDataStore = useUserDataStore();
+const { getFavouritesCount } = storeToRefs(userDataStore)
 
 const sortingOrder = ref(SortingOrderPokemon.NUM_ASC);
 const searchText = ref("");
