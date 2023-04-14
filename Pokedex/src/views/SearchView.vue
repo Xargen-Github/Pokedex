@@ -9,7 +9,7 @@ import PopUpSelection from './PopUpSelection.vue';
 import PrimeVueButton from 'primevue/button'
 
 const store = usePokemonStore();
-const { getPokemonList } = storeToRefs(store)
+const { getPokemonList, getFavouritesCount } = storeToRefs(store)
 
 const sortingOrder = ref(SortingOrderPokemon.NUM_ASC);
 const searchText = ref("");
@@ -49,12 +49,12 @@ function updateSortingOrder(so:any) {
                     5 pokemons
                 </template>
             </LargeColoredButton>
-            <LargeColoredButton class="bg-teal-400 flex-auto">
+            <LargeColoredButton class="bg-teal-400 flex-auto" @click="$router.push('/favourites')">
                 <template v-slot:title>
                     Favorieten
                 </template>
                 <template v-slot:subTitle>
-                    12 pokemons
+                    {{ getFavouritesCount }} pokemon
                 </template>
             </LargeColoredButton>
         </div>

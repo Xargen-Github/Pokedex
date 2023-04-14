@@ -14,13 +14,15 @@ import {
     getEvolutionChainRecursive,
     getIdsFromEvolutionChainRecursive
 } from '@/utils/pokemonUtils'
-import PrimevueImage from 'primevue/image'
+import PrimeVueImage from 'primevue/image'
+import PrimeVueButton from 'primevue/button'
+import TopBar from './TopBar.vue'
 
 export default defineComponent({
     setup() {
         const store = usePokemonStore()
-        const { getPokemonByIds } = storeToRefs(store)
-        return { getPokemonByIds, store, getIdsFromEvolutionChainRecursive }
+        const { getPokemonByIds, isFavouritePokemon } = storeToRefs(store)
+        return { getPokemonByIds, isFavouritePokemon, store, getIdsFromEvolutionChainRecursive }
     },
     components: {
         Card,
@@ -28,7 +30,9 @@ export default defineComponent({
         Tag,
         PokemonTypeTag,
         PokemonListItem,
-        PrimevueImage,
+        PrimeVueImage,
+        PrimeVueButton,
+        TopBar
     },
     data() {
         return {
@@ -84,17 +88,17 @@ export default defineComponent({
 
 <template>
     <div class="bg-green-300 text-black min-h-screen">
-        <nav class="absolute flex flex-row justify-between sticky top-0 backdrop-filter backdrop-blur z-50 text-white m-0 p-2">
-            <router-link class="" to="/">
-                <i class="pi pi-chevron-left"></i>
-            </router-link>
-            <span>{{ pokemon.name }}</span>
-            <i class="pi pi-heart"></i>
-        </nav>
+        <TopBar>
+            <template v-slot:bar>
+                <span>{{ pokemon.name }}</span>
+                <PrimeVueButton v-if="isFavouritePokemon(pokemon)" icon="pi pi-heart-fill text-black bg-transparent" text rounded severity="secondary" @click="store.removeFavourite(pokemon)"/>
+                <PrimeVueButton v-else icon="pi pi-heart text-black bg-transparent" text rounded severity="secondary" @click="store.addFavourite(pokemon)"/>
+            </template>
+        </TopBar>
         <div class="p-4">
             <h1 class="text-white text-3xl font-bold capitalize">{{ pokemon.name }}</h1>
             <div v-if="pokemon.sprites != undefined" class="flex flex-row justify-center">
-                <PrimevueImage image-class="w-screen h-auto w-52 max-h-screen" :src="pokemon.sprites.front_default" preview />
+                <PrimeVueImage image-class="w-screen h-auto w-52 max-h-screen" :src="pokemon.sprites.front_default" preview />
             </div>
             <h2 class="text-white">About</h2>
             <Card>

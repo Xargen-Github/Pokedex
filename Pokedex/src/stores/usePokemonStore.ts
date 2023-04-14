@@ -6,7 +6,8 @@ import { idFromUrl } from "@/utils/pokemonUtils";
 export const usePokemonStore = defineStore('pokemon', {
     state: () => ({ 
         pokemon: [] as PokemonDetails[],
-        pokemonTypes: [] as PokemonType[]
+        pokemonTypes: [] as PokemonType[],
+        favourites: new Set() as Set<number>
     }),
 
     getters: {
@@ -31,6 +32,17 @@ export const usePokemonStore = defineStore('pokemon', {
                 return state.pokemonTypes.find((pokemonType) => pokemonType.name == name.toLowerCase())
             }
         },
+        getFavouritePokemon: (state) => {
+            return state.pokemon.filter((p) => state.favourites.has(p.id))
+        },
+        getFavouritesCount: (state) => {
+            return state.favourites.size
+        },
+        isFavouritePokemon: (state) => {
+            return (favPokemon: PokemonDetails) => { 
+                return state.favourites.has(favPokemon.id)
+            }
+        }
     },
     
     actions: {
@@ -76,5 +88,11 @@ export const usePokemonStore = defineStore('pokemon', {
                 console.log(error)
             }
         },
+        addFavourite(pokemonDetails: PokemonDetails) {
+            this.favourites.add(pokemonDetails.id)
+        },
+        removeFavourite(pokemonDetails: PokemonDetails) {
+            this.favourites.delete(pokemonDetails.id)
+        }
     }
 })

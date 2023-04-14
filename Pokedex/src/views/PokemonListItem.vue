@@ -16,7 +16,7 @@
 
 <template>
     <router-link :to="`/details/${pokemon.id}`">
-        <div class="w-full p-2 shadow-md bg-white rounded-lg flex flex-row h-16">
+        <div class="w-full p-2 shadow-md bg-white rounded-lg flex flex-row h-16 text-black">
             <div class="flex-none">
                 <img class="h-full w-auto" :src="pokemon.sprites.front_default"/>
             </div>
