@@ -93,7 +93,7 @@ export default defineComponent({
         </nav>
         <div class="p-4">
             <h1 class="text-white text-3xl font-bold capitalize">{{ pokemon.name }}</h1>
-            <div class="flex flex-row justify-center">
+            <div v-if="pokemon.sprites != undefined" class="flex flex-row justify-center">
                 <PrimevueImage image-class="w-screen h-auto w-52 max-h-screen" :src="pokemon.sprites.front_default" preview />
             </div>
             <h2 class="text-white">About</h2>
