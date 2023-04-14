@@ -1,47 +1,73 @@
 <script setup lang="ts">
 import { usePokemonStore } from '@/stores/usePokemonStore'
+import { useUserDataStore } from '@/stores/useUserDataStore';
+import { SortingOrderPokemon } from "@/types/pokemonTypes";
 import { storeToRefs } from 'pinia'
-const store = usePokemonStore();
-const { getPokemonList, getPokemonTypesList } = storeToRefs(store)
+import PokemonListItem from '@/components/PokemonListItem.vue';
+import LargeColoredButton from '@/components/LargeColoredButton.vue';
+import { ref } from 'vue'
+import PopUpSelection from '@/components/PopUpSelection.vue';
+import PrimeVueButton from 'primevue/button'
 
-store.fetchPokemonTypes();
-store.fetchPokemon();
+const pokemonStore = usePokemonStore();
+const { getPokemonList } = storeToRefs(pokemonStore)
+
+const userDataStore = useUserDataStore();
+const { getFavouritesCount } = storeToRefs(userDataStore)
+
+const sortingOrder = ref(SortingOrderPokemon.NUM_ASC);
+const searchText = ref("");
+
+function updateSortingOrder(so: any) {
+    sortingOrder.value = so
+}
 </script>
 
 <template>
-    <div class="bg-white text-black">
+    <div class="bg-white text-black p-4 flex gap-2 flex-col min-h-screen">
         <div class="block text-right">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                class="w-6 h-6 inline">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                class="w-6 h-6 inline">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
-            </svg>
+            <PrimeVueButton icon="pi pi-filter text-black bg-transparent" text rounded severity="secondary" />
+            <PopUpSelection :modelValue="sortingOrder" @update:modelValue="updateSortingOrder" :items="[
+                SortingOrderPokemon.ALFA_ASC,
+                SortingOrderPokemon.ALFA_DESC,
+                SortingOrderPokemon.NUM_ASC,
+                SortingOrderPokemon.NUM_DESC
+            ]" :initial="SortingOrderPokemon.ALFA_ASC" />
         </div>
+
         <h1 class="text-3xl font-bold">Pokédex</h1>
-        <form>
-            <input type="search" placeholder="Pokémon zoeken" />
-        </form>
-        <div>
-            <button>
-                Mijn team
-            </button>
-            <button>
-                Favorieten
-            </button>
+
+        <div class="w-full bg-slate-100 rounded-lg box-border flex flex-row text-slate-400 h-8">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                class="grow-0 box-border pl-2 py-1 h-full">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+            <input v-model="searchText" class="bg-inherit h-full px-2 py-1 flex-1" type="text"
+                placeholder="Pokémon zoeken" />
         </div>
-        <div class="w-full">
-            <div class="w-5/6 shadow-xl m-8 bg-white rounded-lg" v-for="pokemon of getPokemonList">
-                <img />
-                <h2>{{ pokemon.name }}</h2>
-                <p>Nr. {{ pokemon.id }}</p>
-                <span v-for="[pokemonTypeKey, pokemonType] in pokemon.types">
-                    {{ pokemonType.name }}
-                </span>
-            </div>
+
+        <div class="flex gap-2">
+            <LargeColoredButton class="bg-violet-800 flex-auto">
+                <template v-slot:title>
+                    Mijn team
+                </template>
+                <template v-slot:subTitle>
+                    5 pokemons
+                </template>
+            </LargeColoredButton>
+            <LargeColoredButton class="bg-teal-400 flex-auto" @click="$router.push('/favourites')">
+                <template v-slot:title>
+                    Favorieten
+                </template>
+                <template v-slot:subTitle>
+                    {{ getFavouritesCount }} pokemon
+                </template>
+            </LargeColoredButton>
         </div>
-    </div></template>
+        
+        <div class="w-full flex flex-col gap-1">
+            <PokemonListItem v-for="p of getPokemonList(sortingOrder, searchText)" :key="p.id" :pokemon="p" />
+        </div>
+    </div>
+</template>
