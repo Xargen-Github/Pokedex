@@ -50,7 +50,7 @@
 
 <template>
     <div class="w-6 h-6 inline" >
-        <PrimeVueButton icon="pi pi-sort-alt" @click="toggle()" severity="success"/>
+        <PrimeVueButton icon="pi pi-sort-alt text-black bg-transparent" @click="toggle()" text rounded severity="secondary"/>
         <PrimeVueDialog class="bg-white text-black" v-model:visible="visible" header="Sorteren op" :style="{ width: '100vw' }" position="bottom" :modal="false" :draggable="false">
             <PrimeVueListBox :value=modelValue :options="items" optionLabel="title" class="w-full p-listbox-list" listStyle="max-height:250px" @change="$emit('update:modelValue', $event.value)">
                 <template #option="slotProps">

@@ -6,6 +6,7 @@ import PokemonListItem from './PokemonListItem.vue';
 import LargeColoredButton from './LargeColoredButton.vue';
 import { onBeforeMount, onMounted, ref } from 'vue'
 import PopUpSelection from './PopUpSelection.vue';
+import PrimeVueButton from 'primevue/button'
 
 const store = usePokemonStore();
 const { getPokemonList } = storeToRefs(store)
@@ -21,11 +22,7 @@ function updateSortingOrder(so:any) {
 <template>
     <div class="bg-white text-black p-4 flex gap-2 flex-col min-h-screen">
         <div class="block text-right">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                class="w-6 h-6 inline">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
-            </svg>
+            <PrimeVueButton icon="pi pi-filter text-black bg-transparent" text rounded severity="secondary"/>
             <PopUpSelection :modelValue="sortingOrder"
                 @update:modelValue="updateSortingOrder" 
                 :items="[
